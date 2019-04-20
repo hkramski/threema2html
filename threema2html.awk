@@ -1,4 +1,4 @@
-# $Id: threema2html.awk,v 1.7 2019/04/20 11:30:14 kramski Exp kramski $
+# $Id: threema2html.awk,v 1.8 2019/04/20 12:44:20 kramski Exp kramski $
 # Convert Threema export to nicely formatted HTML
 # 1. Export a chat in Threema (including media files)
 # 2. Unpack .zip into the folder where this .awk script lives
@@ -97,20 +97,20 @@ BEGIN {
     
     if (Verbose)
     {
-        print "This is $Id: threema2html.awk,v 1.7 2019/04/20 11:30:14 kramski Exp kramski $."
-        print "Parameters in effect:"
-        print "\tDateFrom     = " DateFrom
-        print "\tDateTo       = " DateTo
-        print "\tExporterName = " ExporterName
-        print "\tMediaFolder  = " MediaFolder
-        print "\tThumbWidth   = " ThumbWidth
-        print "\tVerbose      = " Verbose
+        print "This is $Id: threema2html.awk,v 1.8 2019/04/20 12:44:20 kramski Exp kramski $." > "/dev/stderr"
+        print "Parameters in effect:"           > "/dev/stderr"
+        print "\tDateFrom     = " DateFrom      > "/dev/stderr"
+        print "\tDateTo       = " DateTo        > "/dev/stderr"
+        print "\tExporterName = " ExporterName  > "/dev/stderr"
+        print "\tMediaFolder  = " MediaFolder   > "/dev/stderr"
+        print "\tThumbWidth   = " ThumbWidth    > "/dev/stderr"
+        print "\tVerbose      = " Verbose       > "/dev/stderr"
     }
     
     # print file header
     print "<html>"
     print "<head>"
-    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.7 2019/04/20 11:30:14 kramski Exp kramski $\">"
+    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.8 2019/04/20 12:44:20 kramski Exp kramski $\">"
     print "\t<title>Threema Export</title>"
     print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"./lib/default.css\">"
     print "</head>"
