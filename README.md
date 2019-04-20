@@ -12,3 +12,8 @@ Convert a Threema chat export to nicely formatted HTML
 This script expects German date formats and the exporter's user name be "Ich".
 
 For languages other than German, you probably will have to adjust some code.
+
+Screenshot
+----------
+
+![Demo Screenshot](https://github.com/hkramski/threema2html/blob/master/demo.png "Demo Screenshot")
