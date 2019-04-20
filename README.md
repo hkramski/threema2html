@@ -1,7 +1,7 @@
 threema2html
 ============
 
-Convert Threema export to nicely formatted HTML
+Convert a Threema chat export to nicely formatted HTML
 
 - Export a chat in Threema (including media files, see https://threema.ch/es/faq/chatexport)
 - Unpack .zip into the folder where this .awk script lives
