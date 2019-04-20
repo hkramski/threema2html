@@ -1,0 +1,79 @@
+body {
+    background-color : lightgrey;
+    font-family : helvetica, sans-serif;
+    font-size : normal;
+    padding : 1ex;
+}
+
+div.date {
+    background-color : lightgrey;
+    padding : 1ex;
+    margin : 1ex;
+    border: 1 green solid;
+}
+
+div.date h2 {
+    background-color : lightblue;
+    width : 10%; 
+    padding : 1ex;
+    border-radius : 15px;
+    margin-left : 45%;
+    text-align : center
+}
+
+/* div.Gusti, div.Julian, div.Florian, div.Leonie, div.Zweinz { */
+div.date div {
+    background-color : white;
+    padding : 1ex;
+    margin : 1ex;
+    width : 60%;
+    border-right : 1px solid grey;
+    border-bottom : 1px solid grey;
+    border-radius : 0px 20px 20px 20px;
+    text-align : left;
+}
+
+div.date div.Ich {
+    background-color : #eafaf1;
+    padding : 1ex;
+    margin : 1ex;
+    min-width : 60%;
+    margin-left : 40%;
+    border-right : 1px solid grey;
+    border-bottom : 1px solid grey;
+    border-radius : 20px 0px 20px 20px;
+    text-align : right;
+}
+
+div.Gusti::before {
+    content : url(gusti.face.icon);
+}
+
+div.Julian::before {
+    content : url(julian.face.icon);
+}
+
+div.Florian::before {
+    content : url(florian.face.icon);
+}
+
+div.Leonie::before {
+    content : url(leonie.face.icon);
+}
+
+div.Zweinz::before {
+    content : url(root.face.icon);
+}
+
+div.Heinz::before {
+    content : url(heinz.face.icon);
+}
+
+p.timestamp {
+    color : grey;
+    font-size : small;
+}
+
+img {
+    border-radius : 15px;
+}
