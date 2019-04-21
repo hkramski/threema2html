@@ -1,4 +1,4 @@
-# $Id: threema2html.awk,v 1.9 2019/04/21 10:24:55 kramski Exp kramski $
+# $Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $
 # Convert Threema export to nicely formatted HTML
 # 1. Export a chat in Threema (including media files)
 # 2. Unpack .zip into the folder where this .awk script lives
@@ -13,16 +13,18 @@ function usage()
 #------------------------------------------------------------------------------
 {
     print "Usage: gawk -f threema2html.awk [-- options] inputfile [> outputfile]"
-    print "options:"
-    print "\t-f date   \t Start of date range to include (default: 19700101)" 
-    print "\t-t date   \t End of date range to include (default: 20701231)" 
-    print "\t-n name   \t Name of exporter to be substituted for user \"Ich\" (default: none)"
-    print "\t-w width  \t Image width (default: 480)"
-    print "\t-m folder \t Media folder (default: \"./media\")"
-    print "\t-v        \t Verbose"
-    print "\t-h        \t Help"
-    print "\tinputfile \t Exported Threema messages (.txt)"
-    print "\toutputfile\t Output file (.html)"
+    print "\toptions:"
+    print "\t\t-f date   \tStart of date range to include (default: 19700101)" 
+    print "\t\t-t date   \tEnd of date range to include (default: 20701231)" 
+    print "\t\t-T title  \tHTML title (default: \"Threema Export\")"
+    print "\t\t-n name   \tName of exporter to be substituted for user \"Ich\" (default: none)"
+    print "\t\t-m folder \tMedia folder (default: \"./media\")"
+    print "\t\t-s style  \tCSS style file (default: \"./lib/default.css\")"
+    print "\t\t-w width  \tImage width (default: 480)"
+    print "\t\t-v        \tVerbose"
+    print "\t\t-h        \tHelp"
+    print "\tinputfile:  \t\tExported Threema messages file (.txt)"
+    print "\toutputfile: \t\tOutput file (.html)"
 }
 
 #------------------------------------------------------------------------------
@@ -32,8 +34,10 @@ BEGIN {
     # Defaults
     DateFrom = 19700101
     DateTo   = 20701231
+    Title = "Threema Export"
     ExporterName = ""
     MediaFolder = "./media/"
+    StyleFile = "./lib/default.css"
     ThumbWidth = 480
     
     # internal variables
@@ -43,7 +47,7 @@ BEGIN {
     ONR = 0
     
     # process options
-    while ((C = getopt(ARGC, ARGV, "f:t:n:w:m:vh")) != -1) 
+    while ((C = getopt(ARGC, ARGV, "f:t:T:n:m:s:w:vh")) != -1) 
     {
         if (C == "h") 
         {
@@ -56,10 +60,14 @@ BEGIN {
             DateFrom = Optarg * 1
         if (C == "t") 
             DateTo = Optarg * 1
+        if (C == "T") 
+            Title = Optarg 
         if (C == "n") 
             ExporterName = Optarg        
         if (C == "m") 
             MediaFolder = Optarg
+        if (C == "s") 
+            StyleFile = Optarg
         if (C == "w") 
             ThumbWidth = Optarg * 1
     }
@@ -96,12 +104,14 @@ BEGIN {
 
     if (Verbose)
     {
-        print "This is $Id: threema2html.awk,v 1.9 2019/04/21 10:24:55 kramski Exp kramski $." > "/dev/stderr"
+        print "This is $Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $." > "/dev/stderr"
         print "Parameters in effect:"           > "/dev/stderr"
         print "\tDateFrom     = " DateFrom      > "/dev/stderr"
         print "\tDateTo       = " DateTo        > "/dev/stderr"
         print "\tExporterName = " ExporterName  > "/dev/stderr"
+        print "\tTitle        = " Title         > "/dev/stderr"
         print "\tMediaFolder  = " MediaFolder   > "/dev/stderr"
+        print "\tStyleFile    = " StyleFile     > "/dev/stderr"
         print "\tThumbWidth   = " ThumbWidth    > "/dev/stderr"
         print "\tVerbose      = " Verbose       > "/dev/stderr"
     }
@@ -109,9 +119,9 @@ BEGIN {
     # print file header
     print "<html>"
     print "<head>"
-    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.9 2019/04/21 10:24:55 kramski Exp kramski $\">"
-    print "\t<title>Threema Export</title>"
-    print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"./lib/default.css\">"
+    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $\">"
+    print "\t<title>" Title "</title>"
+    print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"" StyleFile "\">"
     print "</head>"
     print "<body>"
     
