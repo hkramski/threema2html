@@ -1,4 +1,4 @@
-# $Id: threema2html.awk,v 1.8 2019/04/20 12:44:20 kramski Exp kramski $
+# $Id: threema2html.awk,v 1.9 2019/04/21 10:24:55 kramski Exp kramski $
 # Convert Threema export to nicely formatted HTML
 # 1. Export a chat in Threema (including media files)
 # 2. Unpack .zip into the folder where this .awk script lives
@@ -13,7 +13,7 @@ function usage()
 #------------------------------------------------------------------------------
 {
     print "Usage: gawk -f threema2html.awk [-- options] inputfile [> outputfile]"
-    print "Options:"
+    print "options:"
     print "\t-f date   \t Start of date range to include (default: 19700101)" 
     print "\t-t date   \t End of date range to include (default: 20701231)" 
     print "\t-n name   \t Name of exporter to be substituted for user \"Ich\" (default: none)"
@@ -42,10 +42,9 @@ BEGIN {
     PendingMsg = 0
     ONR = 0
     
-    # get options
+    # process options
     while ((C = getopt(ARGC, ARGV, "f:t:n:w:m:vh")) != -1) 
     {
-        opti++
         if (C == "h") 
         {
             usage()
@@ -65,7 +64,7 @@ BEGIN {
             ThumbWidth = Optarg * 1
     }
      
-    # Clear arguments, so that awk does not try to process the command-line options as file names 
+    # clear arguments, so that awk does not try to process the command-line options as file names 
     # (https://www.gnu.org/software/gawk/manual/html_node/Getopt-Function.html).
     for (I = 1; I <= Optind; I++)
     {
@@ -73,6 +72,7 @@ BEGIN {
             ARGV[I] = ""
     }
     
+    # check options
     if (DateFrom < 19700101 || DateFrom > 20701231)
     {
         print "Invalid -f date: " DateFrom
@@ -94,10 +94,9 @@ BEGIN {
         exit
     }
 
-    
     if (Verbose)
     {
-        print "This is $Id: threema2html.awk,v 1.8 2019/04/20 12:44:20 kramski Exp kramski $." > "/dev/stderr"
+        print "This is $Id: threema2html.awk,v 1.9 2019/04/21 10:24:55 kramski Exp kramski $." > "/dev/stderr"
         print "Parameters in effect:"           > "/dev/stderr"
         print "\tDateFrom     = " DateFrom      > "/dev/stderr"
         print "\tDateTo       = " DateTo        > "/dev/stderr"
@@ -110,11 +109,12 @@ BEGIN {
     # print file header
     print "<html>"
     print "<head>"
-    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.8 2019/04/20 12:44:20 kramski Exp kramski $\">"
+    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.9 2019/04/21 10:24:55 kramski Exp kramski $\">"
     print "\t<title>Threema Export</title>"
     print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"./lib/default.css\">"
     print "</head>"
     print "<body>"
+    
 }
 
 #------------------------------------------------------------------------------
@@ -215,18 +215,21 @@ BEGIN {
 
     ONR++
     PendingMsg = 1
-
+    
 }
 
 #------------------------------------------------------------------------------
 /^[^\[]/ && PendingMsg {   # continuation line
 #------------------------------------------------------------------------------
+    
     print "\t\t\t\t</br>" $0 
+
 }
 
 #------------------------------------------------------------------------------
 END {
 #------------------------------------------------------------------------------
+    
     # close everything
     if (PendingMsg)
     {
