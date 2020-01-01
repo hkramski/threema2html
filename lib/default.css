@@ -1,12 +1,14 @@
 body {
-    background-color : lightgrey;
+    background-color : rgb(239, 235, 233); 
+    background-image : url(wallpaper.png);
+    background-repeat: repeat;
     font-family : helvetica, sans-serif;
     font-size : normal;
     padding : 1ex;
 }
 
 div.date {
-    background-color : lightgrey;
+    /* background-color : lightgrey; */
     padding : 1ex;
     margin : 1ex;
 }
@@ -33,7 +35,7 @@ div.date div {
 }
 
 div.date div.Ich {
-    background-color : #eafaf1;
+    background-color : rgb(223, 240, 216);
     padding : 1ex;
     margin : 1ex;
     min-width : 60%;
