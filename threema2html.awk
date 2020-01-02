@@ -21,6 +21,7 @@
 function usage()
 #------------------------------------------------------------------------------
 {
+    print Banner
     print "Usage: gawk -f threema2html.awk [-- options] inputfile [> outputfile]"
     print "\toptions:"
     print "\t\t-f date   \tStart of date range to include (default: 19700101)" 
@@ -54,6 +55,7 @@ BEGIN {
     OldDate = ""
     PendingMsg = 0
     ONR = 0
+    Banner = "This is threema2html.awk, a script to convert Threema exports to nicely formatted HTML."
     
     # process options
     while ((C = getopt(ARGC, ARGV, "f:t:T:n:m:s:w:vh")) != -1) 
@@ -113,7 +115,7 @@ BEGIN {
 
     if (Verbose)
     {
-        print "This is $Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $." > "/dev/stderr"
+        print Banner                            > "/dev/stderr"
         print "Parameters in effect:"           > "/dev/stderr"
         print "\tDateFrom     = " DateFrom      > "/dev/stderr"
         print "\tDateTo       = " DateTo        > "/dev/stderr"
