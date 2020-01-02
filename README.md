@@ -3,6 +3,8 @@ threema2html
 
 Convert a Threema chat export to nicely formatted HTML
 
+https://github.com/hkramski/threema2html
+
 1. Export a chat in Threema (including media files, see https://threema.ch/en/faq/chatexport).
 2. Unpack .zip into the folder where this .awk script lives.
 4. `gawk -f threema2html.awk messages-chatname.txt > index.html`
