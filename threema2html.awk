@@ -128,6 +128,7 @@ BEGIN {
     }
     
     # print file header
+    print "<!DOCTYPE html>"
     print "<html>"
     print "<head>"
     print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $\">"
@@ -224,15 +225,15 @@ BEGIN {
     # process hyperlinks
     Msg = gensub(/(https?:\/\/[^ ]+)/, "<a href=\"\\1\">\\1</a>", "g", Msg) 
 
-    # process .jpg
-    Msg = gensub(/<([0-9a-f\-]+\.jpg)>/, "\n\t\t\t\t<br/><a href=\"" MediaFolder "\\1\"><img src=\"" MediaFolder "\\1\" width=\"" ThumbWidth "\"/></a>", "g", Msg)    
+    # process images for inline display
+    Msg = gensub(/<(.+\.(jpe?g|png))>/, "\n\t\t\t\t<br/><a href=\"" MediaFolder "\\1\"><img src=\"" MediaFolder "\\1\" alt=\"Image\" width=\"" ThumbWidth "\"/></a>", "g", Msg)    
     
-    # process .mp4
-    Msg = gensub(/<([0-9a-f\-]+\.mp4)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
+    # process other files as links
+    Msg = gensub(/<(.+\.(mp4|pdf|vcf))>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
     
-    # process .pdf
-    Msg = gensub(/<(.+\.pdf)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
-    
+    # sanitize XML characters
+    Msg = gensub(/&/, "&amp;", "g", Msg)
+
     # print Msg
     print "\t\t\t<p class=\"msg\">"
     print "\t\t\t\t" Msg
@@ -245,7 +246,8 @@ BEGIN {
 #------------------------------------------------------------------------------
 /^[^\[]/ && PendingMsg {   # continuation line
 #------------------------------------------------------------------------------
-    
+    # sanitize XML characters
+    gsub(/&/, "&amp;")
     print "\t\t\t\t</br>" $0 
 
 }
