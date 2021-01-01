@@ -14,17 +14,17 @@ function usage()
 {
     print "Usage: gawk -f threema2html.awk [-- options] inputfile [> outputfile]"
     print "\toptions:"
-    print "\t\t-f date   \tStart of date range to include (default: 19700101)" 
-    print "\t\t-t date   \tEnd of date range to include (default: 20701231)" 
-    print "\t\t-T title  \tHTML title (default: \"Threema Export\")"
-    print "\t\t-n name   \tName of exporter to be substituted for user \"Ich\" (default: none)"
-    print "\t\t-m folder \tMedia folder (default: \"./media\")"
-    print "\t\t-s style  \tCSS style file (default: \"./lib/default.css\")"
-    print "\t\t-w width  \tImage width (default: 480)"
-    print "\t\t-v        \tVerbose"
-    print "\t\t-h        \tHelp"
-    print "\tinputfile:  \t\tExported Threema messages file (.txt)"
-    print "\toutputfile: \t\tOutput file (.html)"
+    print "\t\t-f<date>   \tStart of date range to include (default: 19700101)" 
+    print "\t\t-t<date>   \tEnd of date range to include (default: 20701231)" 
+    print "\t\t-T<title>  \tHTML title (default: \"Threema Export\")"
+    print "\t\t-n<name>   \tName of exporter to be substituted for user \"Ich\" (default: none)"
+    print "\t\t-m<folder> \tMedia folder (default: \"./media\")"
+    print "\t\t-s<style>  \tCSS style file (default: \"./lib/default.css\")"
+    print "\t\t-w<width>  \tImage width (default: 480)"
+    print "\t\t-v         \tVerbose"
+    print "\t\t-h         \tHelp"
+    print "\tinputfile:   \t\tExported Threema messages file (.txt)"
+    print "\toutputfile:  \t\tOutput file (.html)"
 }
 
 #------------------------------------------------------------------------------
@@ -219,6 +219,9 @@ BEGIN {
     # process .mp4
     Msg = gensub(/<([0-9a-f\-]+\.mp4)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
     
+    # process .pdf
+    Msg = gensub(/<([0-9a-f\-]+\.pdf)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
+    
     # print Msg
     print "\t\t\t<p class=\"msg\">"
     print "\t\t\t\t" Msg
@@ -248,11 +251,12 @@ END {
         print "\t\t\t\t" DateTime
         print "\t\t\t</p>"
         print "\t\t</div>"
-        print "\t</div>"
-        print "</body>"
-        print "</html>"
     }
-    
+        
+    print "\t</div>"    # date
+    print "</body>"
+    print "</html>"
+        
     print NR " input records, " ONR " output messages." > "/dev/stderr"
 
 }
