@@ -1,4 +1,6 @@
 # Convert Threema export to nicely formatted HTML
+#
+# https://github.com/hkramski/threema2html
 # 
 # 1. Export a chat in Threema (including media files, see https://threema.ch/en/faq/chatexport).
 # 2. Unpack .zip into the folder where this .awk script lives.
@@ -131,7 +133,7 @@ BEGIN {
     print "<!DOCTYPE html>"
     print "<html>"
     print "<head>"
-    print "\t<meta name=\"generator\" content=\"$Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $\">"
+    print "\t<meta name=\"generator\" content=\"threema2html.awk (https://github.com/hkramski/threema2html)\">"
     print "\t<title>" Title "</title>"
     print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"" StyleFile "\">"
     print "</head>"
@@ -146,11 +148,7 @@ BEGIN {
     # close previous message 
     if (PendingMsg)
     {
-        print "\t\t\t</p>"
-        print "\t\t\t<p class=\"timestamp\">"     
-        print "\t\t\t\t" DateTime
-        print "\t\t\t</p>"
-        print "\t\t</div>"
+        CloseMsgDiv()
     }
     
     # process current line
@@ -184,7 +182,7 @@ BEGIN {
 
     if (Date != OldDate)
     {
-        # close previous date group
+        # close previous date div
         if (PendingMsg)
         {
             print "\t</div>"
@@ -222,18 +220,8 @@ BEGIN {
     
     print "\t\t\t<h3>" User2 "</h3>"
 
-    # process hyperlinks
-    Msg = gensub(/(https?:\/\/[^ ]+)/, "<a href=\"\\1\">\\1</a>", "g", Msg) 
-
-    # process images for inline display
-    Msg = gensub(/<(.+\.(jpe?g|png))>/, "\n\t\t\t\t<br/><a href=\"" MediaFolder "\\1\"><img src=\"" MediaFolder "\\1\" alt=\"Image\" width=\"" ThumbWidth "\"/></a>", "g", Msg)    
+    Msg = MakeLinks(Msg)
     
-    # process other files as links
-    Msg = gensub(/<(.+\.(mp4|pdf|vcf))>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
-    
-    # sanitize XML characters
-    Msg = gensub(/&/, "&amp;", "g", Msg)
-
     # print Msg
     print "\t\t\t<p class=\"msg\">"
     print "\t\t\t\t" Msg
@@ -246,26 +234,18 @@ BEGIN {
 #------------------------------------------------------------------------------
 /^[^\[]/ && PendingMsg {   # continuation line
 #------------------------------------------------------------------------------
-    # sanitize XML characters
-    gsub(/&/, "&amp;")
-    print "\t\t\t\t</br>" $0 
+    print "\t\t\t\t</br>" MakeLinks($0)
 
 }
 
 #------------------------------------------------------------------------------
 END {
 #------------------------------------------------------------------------------
-    
     # close everything
     if (PendingMsg)
     {
-        print "\t\t\t</p>"
-        print "\t\t\t<p class=\"timestamp\">"     
-        print "\t\t\t\t" DateTime
-        print "\t\t\t</p>"
-        print "\t\t</div>"
+        CloseMsgDiv()
     }
-        
     print "\t</div>"    # date
     print "</body>"
     print "</html>"
@@ -273,3 +253,34 @@ END {
     print NR " input records, " ONR " output messages." > "/dev/stderr"
 
 }
+
+#------------------------------------------------------------------------------
+function MakeLinks(Text)
+#------------------------------------------------------------------------------
+{
+    # process hyperlinks
+    Text = gensub(/(https?:\/\/[^ ]+)/, "<a href=\"\\1\">\\1</a>", "g", Text) 
+
+    # process images for inline display
+    Text = gensub(/<(.+\.(jpe?g|png))>/, "\n\t\t\t\t<br/><a href=\"" MediaFolder "\\1\"><img src=\"" MediaFolder "\\1\" alt=\"Image\" width=\"" ThumbWidth "\"/></a>", "g", Text)    
+    
+    # process other files as links
+    Text = gensub(/<(.+\.(mp4|pdf|vcf))>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Text)    
+    
+    # sanitize XML characters
+    Text = gensub(/&/, "&amp;", "g", Text)
+
+    return (Text)
+}
+
+#------------------------------------------------------------------------------
+function CloseMsgDiv()
+#------------------------------------------------------------------------------
+{
+    print "\t\t\t</p>"
+    print "\t\t\t<p class=\"timestamp\">"     
+    print "\t\t\t\t" DateTime
+    print "\t\t\t</p>"
+    print "\t\t</div>"
+}
+    
