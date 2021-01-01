@@ -1,10 +1,19 @@
-# $Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $
 # Convert Threema export to nicely formatted HTML
-# 1. Export a chat in Threema (including media files)
-# 2. Unpack .zip into the folder where this .awk script lives
-# 3. Move all media files into "./media" folder
-# 4. "gawk -f $thisscript.awk messages-$chatname.txt > $htmlfile.html"
-# 5. Adjust ./lib/default.css
+# 
+# 1. Export a chat in Threema (including media files, see https://threema.ch/en/faq/chatexport).
+# 2. Unpack .zip into the folder where this .awk script lives.
+# 3. gawk -f threema2html.awk messages-chatname.txt > index.html 
+#    (See gawk -f threema2html.awk -- -h for more options.)
+# 4. Copy relevant media files: 
+#    grep "href=\"./media/" index.html | cut -d= -f2 | cut -d\" -f2 | cut -d/ -f3 > medialist.txt 
+#    xargs --arg-file=medialist.txt cp --target-directory=./media/ 
+# 5. Adjust ./lib/default.css.
+#
+# This script expects German date formats and the exporter’s user name be “Ich”. 
+# For languages other than German, you probably will have to adjust some code. 
+#
+# It has been tested on Android based exports only. 
+
 
 @include "getopt.awk"
 
@@ -12,6 +21,7 @@
 function usage()
 #------------------------------------------------------------------------------
 {
+    print Banner
     print "Usage: gawk -f threema2html.awk [-- options] inputfile [> outputfile]"
     print "\toptions:"
     print "\t\t-f<date>   \tStart of date range to include (default: 19700101)" 
@@ -45,6 +55,7 @@ BEGIN {
     OldDate = ""
     PendingMsg = 0
     ONR = 0
+    Banner = "This is threema2html.awk, a script to convert Threema exports to nicely formatted HTML."
     
     # process options
     while ((C = getopt(ARGC, ARGV, "f:t:T:n:m:s:w:vh")) != -1) 
@@ -104,7 +115,7 @@ BEGIN {
 
     if (Verbose)
     {
-        print "This is $Id: threema2html.awk,v 1.11 2019/04/21 10:51:35 kramski Exp kramski $." > "/dev/stderr"
+        print Banner                            > "/dev/stderr"
         print "Parameters in effect:"           > "/dev/stderr"
         print "\tDateFrom     = " DateFrom      > "/dev/stderr"
         print "\tDateTo       = " DateTo        > "/dev/stderr"
@@ -220,7 +231,7 @@ BEGIN {
     Msg = gensub(/<([0-9a-f\-]+\.mp4)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
     
     # process .pdf
-    Msg = gensub(/<([0-9a-f\-]+\.pdf)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
+    Msg = gensub(/<(.+\.pdf)>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Msg)    
     
     # print Msg
     print "\t\t\t<p class=\"msg\">"
