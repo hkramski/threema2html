@@ -258,14 +258,14 @@ END {
 function MakeLinks(Text)
 #------------------------------------------------------------------------------
 {
-    # process hyperlinks
-    Text = gensub(/(https?:\/\/[^ ]+)/, "<a href=\"\\1\">\\1</a>", "g", Text) 
-
     # process images for inline display
     Text = gensub(/<(.+\.(jpe?g|png))>/, "\n\t\t\t\t<br/><a href=\"" MediaFolder "\\1\"><img src=\"" MediaFolder "\\1\" alt=\"Image\" width=\"" ThumbWidth "\"/></a>", "g", Text)    
     
     # process other files as links
     Text = gensub(/<(.+\.(mp4|pdf|vcf))>/, "\n\t\t\t\t<a href=\"" MediaFolder "\\1\">\\1</a>", "g", Text)    
+
+    # process hyperlinks
+    Text = gensub(/(https?:\/\/[^ ]+)/, "<a href=\"\\1\">\\1</a>", "g", Text) 
     
     # sanitize XML characters
     Text = gensub(/&/, "&amp;", "g", Text)
