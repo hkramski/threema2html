@@ -1,7 +1,9 @@
 threema2html
 ============
 
-Convert a Threema chat export to nicely formatted HTML
+Project moved to Codeberg: https://codeberg.org/harveyk/threema2html
+
+Convert a Threema chat export to nicely formatted, long term preservation friendly HTML
 
 https://github.com/hkramski/threema2html
 
